@@ -1,9 +1,8 @@
 {
   "6289675134806-1597035781@g.us": {
     "afk": {},
-    "welcome": true,
-    "antilink": true,
-    "leveling": true
+    "welcome": false,
+    "antilink": true
   },
   "6282237152219-1595764908@g.us": {
     "afk": {}
@@ -15,8 +14,7 @@
     "afk": {}
   },
   "16073033204-1617806772@g.us": {
-    "afk": {},
-    "leveling": true
+    "afk": {}
   },
   "6281513452300-1600179034@g.us": {
     "afk": {}
