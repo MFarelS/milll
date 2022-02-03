@@ -10,10 +10,6 @@ const afkJs = require('./lib/afk')
 const speed = require('performance-now')
 const moment = require('moment-timezone');
 
-const level = require("./game/level");
-let _leveling = JSON.parse(fs.readFileSync('./lib/json/dataGc.json'))
-let _level = JSON.parse(fs.readFileSync('./game/database/level.json'))
-
 const tmp_hit = JSON.parse(fs.readFileSync('./lib/json/tmp_hit.json'))
 
 hit_today = []
@@ -43,81 +39,6 @@ const { color, getBuffer, convertMp3 } = require('./lib/func')
 moment.tz.setDefault('Asia/Jakarta').locale('id');
 module.exports = handle = async (client, Client, mek) => {
     try {
-        if (!mek.hasNewMessage) return
-        mek = mek.messages.all()[0]
-		if (!mek.message) return
-		if (mek.key && mek.key.remoteJid == 'status@broadcast') return
-		if (mek.key.id.startsWith('3EB0') && mek.key.id.length === 12) return
-		global.ky_ttt
-		global.blocked
-		mek.message = (Object.keys(mek.message)[0] === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
-		const { text, extendedText, contact, location, liveLocation, image, video, sticker, document, audio, product } = MessageType
-		const time = moment.tz('Asia/Jakarta').format('DD/MM HH:mm:ss')
-		const content = JSON.stringify(mek.message)
-		const from = mek.key.remoteJid
-		const type = Object.keys(mek.message)[0]        
-        const cmd = (type === 'conversation' && mek.message.conversation) ? mek.message.conversation : (type == 'imageMessage') && mek.message.imageMessage.caption ? mek.message.imageMessage.caption : (type == 'videoMessage') && mek.message.videoMessage.caption ? mek.message.videoMessage.caption : (type == 'extendedTextMessage') && mek.message.extendedTextMessage.text ? mek.message.extendedTextMessage.text : ''.slice(1).trim().split(/ +/).shift().toLowerCase()
-        const prefix = /^[°•π÷×¶∆£¢€¥®™=|~#%^&.?/\\©^z+*,;]/.test(cmd) ? cmd.match(/^[°•π÷×¶∆£¢€¥®™=|~#%^&.?/\\©^z+*,;]/gi) : '!'
-        body = (type === 'conversation' && mek.message.conversation.startsWith(prefix)) ? mek.message.conversation : (type == 'imageMessage') && mek.message[type].caption.startsWith(prefix) ? mek.message[type].caption : (type == 'videoMessage') && mek.message[type].caption.startsWith(prefix) ? mek.message[type].caption : (type == 'extendedTextMessage') && mek.message[type].text.startsWith(prefix) ? mek.message[type].text : (type == 'listResponseMessage') && mek.message[type].singleSelectReply.selectedRowId ? mek.message[type].singleSelectReply.selectedRowId : (type == 'buttonsResponseMessage') && mek.message[type].selectedButtonId ? mek.message[type].selectedButtonId : (type == 'stickerMessage') && (getCmd(mek.message[type].fileSha256.toString('base64')) !== null && getCmd(mek.message[type].fileSha256.toString('base64')) !== undefined) ? getCmd(mek.message[type].fileSha256.toString('base64')) : ""
-		budy = (type === 'conversation') ? mek.message.conversation : (type === 'extendedTextMessage') ? mek.message.extendedTextMessage.text : ''
-		const command = body.slice(1).trim().split(/ +/).shift().toLowerCase()		
-		const args = body.trim().split(/ +/).slice(1)
-		hit_today.push(command)
-		const arg = body.substring(body.indexOf(' ') + 1)
-		const ar = args.map((v) => v.toLowerCase())
-		const argz = body.trim().split(/ +/).slice(1)
-		const isCmd = body.startsWith(prefix) 
-		if (isCmd) cmdadd()
-		const totalhit = JSON.parse(fs.readFileSync('./lib/json/tmp_hit.json'))[0].totalcmd
-        const q = args.join(' ')
-
-        const botNumber = client.user.jid
-        const ownerNumber = setting.ownerNumber
-		const ownerName = setting.ownerName
-		const botName = setting.botName
-		const isGroup = from.endsWith('@g.us')
-		let sender = isGroup ? mek.participant : mek.key.remoteJid
-		let senderr = mek.key.fromMe ? client.user.jid : mek.key.remoteJid.endsWith('@g.us') ? mek.participant : mek.key.remoteJid
-		const totalchat = await client.chats.all()
-		const groupMetadata = isGroup ? await client.groupMetadata(from) : ''
-		const groupName = isGroup ? groupMetadata.subject : ''
-		const groupId = isGroup ? groupMetadata.jid : ''
-		const groupMembers = isGroup ? groupMetadata.participants : ''
-		const groupDesc = isGroup ? groupMetadata.desc : ''
-		const groupOwner = isGroup ? groupMetadata.owner : ''
-		const groupAdmins = isGroup ? getGroupAdmins(groupMembers) : ''
-		const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
-		const isGroupAdmins = groupAdmins.includes(sender) || false
-        const conts = mek.key.fromMe ? client.user.jid : client.contacts[sender] || { notify: jid.replace(/@.+/, '') }
-        const pushname = mek.key.fromMe ? client.user.name : conts.notify || conts.vname || conts.name || '-'
-        const mentionByTag = type == "extendedTextMessage" && mek.message.extendedTextMessage.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.mentionedJid : []
-        const mentionByreply = type == "extendedTextMessage" && mek.message.extendedTextMessage.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.participant || "" : ""
-        const mention = typeof(mentionByTag) == 'string' ? [mentionByTag] : mentionByTag
-        mention != undefined ? mention.push(mentionByreply) : []
-        const mentionUser = mention != undefined ? mention.filter(n => n) : []
-		idttt = []
-	    players1 = []
-	    players2 = []
-	    gilir = []
-	    for (let t of ky_ttt){
-	    idttt.push(t.id)
-	    players1.push(t.player1)
-	    players2.push(t.player2)
-	    gilir.push(t.gilir)
-}
-	    const isTTT = isGroup ? idttt.includes(from) : false
-	    isPlayer1 = isGroup ? players1.includes(sender) : false
-        isPlayer2 = isGroup ? players2.includes(sender) : false
-        const isOwner = ownerNumber.includes(senderr)
-        const isRegister = register.includes(sender)
-        const isPremium = premium.checkPremiumUser(sender, _premium)
-        const isSewa = _sewa.checkSewaGroup(from, sewa)
-        const isAfkOn = afk.checkAfkUser(sender, _afk)
-        const isLevelingOn = isGroup ? _leveling.includes(from) : false
-        const isMuted = isGroup ? mute.includes(from) : false
-        const isAntiLink = isGroup ? antilink.includes(from) : false
-        const isWelkom = isGroup ? welkom.includes(from) : false
-
 
 /*MENU*/
     	Client.cmd.on('listmsg', async(data) => {
@@ -1237,51 +1158,6 @@ var ucapanWaktu = 'Selamat malam🌃'
             } else if(data.args[0].toLowerCase() == 'off') {
                 if(!dataGc[data.from].antilink) return data.reply('Already off!')
                 dataGc[data.from].antilink = false
-                fs.writeFileSync('./lib/json/dataGc.json', JSON.stringify(dataGc))
-                data.reply('Sukses!')
-            } else {
-                     const buttonMessage5 = {
-                           contentText:  `(⚙️) Pilih On atau Off`,
-                           footerText: `${configs.botname}\n\nCreator : Bang Riyadh`,
-                                "contextInfo": {
-                                      participant: data.sender,
-                                      stanzaId: data.message.key.id,
-                                      quotedMessage: data.message.message,
-                                     },
-                                     buttons: [
-                                     {
-                                       buttonId: `${data.prefix}${data.command} on`,
-                                       buttonText: {
-                                          displayText: "(🔓) ON"
-                                        },
-                                         "type": "RESPONSE"
-                                     },
-				     {
-                                       buttonId: `${data.prefix}${data.command} off`,
-                                       buttonText: {
-                                          displayText: "(🔒) OFF"
-                                        },
-                                         "type": "RESPONSE"
-                                     },
-                                        ],
-                                         headerType: 1,           
-                                         }
-                    let zz = client.prepareMessageFromContent(data.from, {buttonsMessage: buttonMessage5}, {})
-                	client.relayWAMessage(zz, {waitForAck: false})
-			}
-			})
-	     Client.cmd.on('leveling', (data) => {
-            if(!data.isGroup) return data.reply(mess.admin)
-            if(!data.isAdmin) return data.reply(mess.admin)
-            const dataGc = JSON.parse(fs.readFileSync('./lib/json/dataGc.json'))
-            if(data.args[0].toLowerCase() == 'on') {
-                if(dataGc[data.from].leveling) return data.reply('Already on!')
-                dataGc[data.from].leveling = true
-                fs.writeFileSync('./lib/json/dataGc.json', JSON.stringify(dataGc))
-                data.reply('Sukses!')
-            } else if(data.args[0].toLowerCase() == 'off') {
-                if(!dataGc[data.from].leveling) return data.reply('Already off!')
-                dataGc[data.from].leveling = false
                 fs.writeFileSync('./lib/json/dataGc.json', JSON.stringify(dataGc))
                 data.reply('Sukses!')
             } else {
